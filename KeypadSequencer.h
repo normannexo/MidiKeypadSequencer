@@ -54,7 +54,7 @@ class Step {
     Step(byte note, boolean active);
     
     
-}
+};
 
 
 
