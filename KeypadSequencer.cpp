@@ -33,3 +33,10 @@ void displayStep(Adafruit_7segment* seg, int stepdisplay) {
 }
 
 
+// Step class
+Step::Step(byte note, boolean active) {
+  this->note = note;
+  this->active = active;
+}
+
+

@@ -47,6 +47,15 @@ class TimeDiv {
      
 };
 
+class Step {
+  public:
+    byte note;
+    boolean active;
+    Step(byte note, boolean active);
+    
+    
+}
+
 
 
 #endif
