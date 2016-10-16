@@ -49,13 +49,27 @@ class TimeDiv {
 
 class Step {
   public:
-    byte note;
-    boolean active;
+    byte note = 0;
+    boolean active = 0;
     Step(byte note, boolean active);
+    Step();
     
     
 };
 
+class StepSequence {
+  public:
+    byte steplength = 16;
+    byte currentstep = 0;
+    byte currentnote;
+    Step steps[16];
+
+   
+    
+};
+
+Step* buildStepArrayFromRaw(byte* notes, boolean* actives);
+  
 
 
 #endif

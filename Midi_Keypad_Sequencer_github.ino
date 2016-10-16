@@ -4,6 +4,7 @@
 #include "Adafruit_GFX.h"
 #include <Keypad.h>
 #include "KeypadSequencer.h"
+#include "initsequences.h"
 
 
 using namespace midi;
@@ -100,8 +101,8 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 // define Sequence
 int activeStep = 1;
-int notes[16] = {60,60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60};
-boolean stepactive[16] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+int notes[16];
+boolean stepactive[16];
 int noteindex = 0;
 boolean stepshift = false;
 
@@ -113,6 +114,10 @@ void setup() {
    pinMode(btnPlay, INPUT);
    pinMode(btnShift, INPUT);
    pinMode(btnFunc, INPUT);
+
+   stepactive = pat1_actives;
+   notes =  * pat1_notes;
+   
    MIDI.setHandleClock(handleClock);
    MIDI.begin(1);
    muteAll();

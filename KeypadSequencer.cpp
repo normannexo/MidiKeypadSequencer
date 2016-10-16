@@ -39,4 +39,25 @@ Step::Step(byte note, boolean active) {
   this->active = active;
 }
 
+Step::Step() {
+  this->note = 0;
+  this->active = true;
+}
+
+//StepSequence class
+
+
+// util functions
+
+Step* buildStepArrayFromRaw(byte* notes, boolean* actives) {
+  Step tmpStep[16];
+  for (int i = 0; i < 16; i++) {
+    tmpStep[i].note = notes[i];
+    tmpStep[i].active = actives[i];
+  }
+  return tmpStep;
+}
+
+
+
 
