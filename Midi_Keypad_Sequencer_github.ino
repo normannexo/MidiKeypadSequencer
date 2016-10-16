@@ -29,6 +29,8 @@ const byte COLS = 3;
 const int btnStop = 13;
 int btnStopState = 0;
 
+boolean jammode1 = false;
+
 
 const int btnPlay = 12;
 int btnPlayState = 0;
@@ -101,8 +103,8 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 // define Sequence
 int activeStep = 1;
-int notes[16] ={60,60, 60, 60, 60, 60, 60, 60, 44, 60, 60, 60, 60, 60, 60, 60};
-boolean stepactive[16]=  {true, false, true, false, true, true, false, true, true, true, true, true, true, true, true, true};
+
+
 
 int noteindex = 0;
 boolean stepshift = false;
@@ -179,7 +181,7 @@ void loop() {
     if (btnFuncState != btnFuncReading) {
       btnFuncState = btnFuncReading;
       if (btnFuncState == 1) {
-      seqmode = (seqmode + 1) % 5;
+      seqmode = (seqmode + 1) % 7;
       }
     } 
    }
@@ -272,7 +274,21 @@ void keypadEvent(KeypadEvent key){
           break;
        
         } // end case keypressed
-        
+      case RELEASED:
+        switch (key - '0') {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 0:
+          handleNumKeyReleased(key);
+          break;
+        } // end switch released;
       } // end switch getkeystate
     
 }
@@ -292,34 +308,34 @@ void resetAndPlay() {
 }
 
 void setStepNote(int step, int note) {
-  notes[step - 1] = note;
+  pattern.notes[step - 1] = note;
 }
 
 void incStepNote(int step) {
-  int curroct  = notes[step- 1] - (notes[step - 1]%12);
-  int offset = (notes[step-1] + 1) % 12;
+  int curroct  = pattern.notes[step- 1] - (pattern.notes[step - 1]%12);
+  int offset = (pattern.notes[step-1] + 1) % 12;
   setStepNote(step, curroct + offset);
   
 }
 
 void decOct(int step) {
-  int curr = notes[step-1];
+  int curr = pattern.notes[step-1];
   curr = curr - 12;
   if (curr < 0) {
-    notes[step-1] = curr + 12;
+    pattern.notes[step-1] = curr + 12;
   } else {
-    notes[step -1] = curr;
+    pattern.notes[step -1] = curr;
   }
   
 }
 
 void incOct(int step) {
-  int curr = notes[step-1];
+  int curr = pattern.notes[step-1];
   curr = curr + 12;
   if (curr > 127) {
-    notes[step-1] = curr -12;
+    pattern.notes[step-1] = curr -12;
   } else {
-    notes[step -1] = curr;
+    pattern.notes[step -1] = curr;
   }
   
 }
@@ -327,9 +343,9 @@ void incOct(int step) {
 void noteStep() {
   currentstep = noteindex + 1;
   MIDI.sendNoteOff(currentnote, 0,1);
-  if (stepactive[noteindex]) {
-    MIDI.sendNoteOn(notes[noteindex], 127,1);
-    currentnote = notes[noteindex];
+  if (pattern.actives[noteindex]) {
+    MIDI.sendNoteOn(pattern.notes[noteindex], 127,1);
+    currentnote = pattern.notes[noteindex];
   }
   
   noteindex = (noteindex+1)%16;
@@ -356,14 +372,14 @@ void display(uint8_t mode) {
        stepdisplay = activeStep;
      }
       seg7.writeDigitNum(1,((stepdisplay-1) % 8) +1 );
-     seg7.writeDigitRaw(3, notechars[notes[stepdisplay-1]% 12]);
+     seg7.writeDigitRaw(3, notechars[pattern.notes[stepdisplay-1]% 12]);
      // b oder Oktaveninfo?
-     if (noteflat[notes[stepdisplay-1] % 12]) {
+     if (noteflat[pattern.notes[stepdisplay-1] % 12]) {
       seg7.writeDigitRaw(4, B01111100);
      } else {
-      seg7.writeDigitNum(4, notes[stepdisplay-1] / 12);
+      seg7.writeDigitNum(4, pattern.notes[stepdisplay-1] / 12);
      }
-     if (!stepactive[stepdisplay-1]) {
+     if (!pattern.actives[stepdisplay-1]) {
       seg7.writeDigitRaw(3, B01000000);
       seg7.writeDigitRaw(4, B01000000);
     
@@ -400,8 +416,20 @@ void display(uint8_t mode) {
      }
      seg7.writeDisplay();
      break;
-  
-  }
+  case MODEJAM:
+     if (jammode1) {
+       seg7.writeDigitRaw(1,B11111111);
+       
+     } else {
+      seg7.writeDigitRaw(1, B00000000);
+     }
+     seg7.writeDigitRaw(4, B00001111);
+     seg7.writeDisplay();
+     break;
+  case MODEPATSELECT:
+     seg7.writeDigitRaw(4, B01110011);
+     seg7.writeDisplay();
+  } // end switch mode
 }
 
 void handleClock() {
@@ -457,6 +485,9 @@ void handleNumKeyPressed(char key) {
   case 7:
   case 8:
     switch (seqmode) {
+    case MODEJAM:
+      jam(numKey, true);
+      break;
     default:
       seqmode = MODESTEP;
       if (!stepshift) {
@@ -465,7 +496,7 @@ void handleNumKeyPressed(char key) {
         activeStep = numKey + 8;
       }
       if (btnShiftState == 1) {
-        stepactive[activeStep - 1] = !stepactive[activeStep-1];
+        pattern.actives[activeStep - 1] = !pattern.actives[activeStep-1];
       }
     } // end switch seqmode
     break;
@@ -497,4 +528,41 @@ void handleNumKeyPressed(char key) {
   
   
 }
+
+void handleNumKeyReleased(char key) {
+  byte numKey = key - '0';
+  switch (numKey) {
+  case 1:
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+    switch (seqmode) {
+    case MODEJAM:
+      //jam(numKey, true);
+      break;
+    } // end switch seqmode '0'
+    break;
+    
+    
+    
+
+  } // end switch numKey
+  
+  
+}
+
+void jam(byte num, boolean bjam) {
+  switch(num) {
+  case 1:
+    jammode1 = bjam;
+    break;
+  }
+  
+  
+}
+
 

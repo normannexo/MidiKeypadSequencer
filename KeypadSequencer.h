@@ -63,6 +63,8 @@ class Pattern {
     byte currentstep = 0;
     byte currentnote;
     Step steps[16];
+    byte notes[16];
+    byte actives[16];
     byte* getNotes();
     Pattern(byte*, boolean*);
 
@@ -71,6 +73,8 @@ class Pattern {
 };
 
 Step* buildStepArrayFromRaw(byte* notes, boolean* actives);
+
+
   
 
 
