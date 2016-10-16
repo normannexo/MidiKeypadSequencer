@@ -57,12 +57,14 @@ class Step {
     
 };
 
-class StepSequence {
+class Pattern {
   public:
-    byte steplength = 16;
+    byte patlength = 16;
     byte currentstep = 0;
     byte currentnote;
     Step steps[16];
+    byte* getNotes();
+    Pattern(byte*, boolean*);
 
    
     

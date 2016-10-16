@@ -101,10 +101,15 @@ Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 // define Sequence
 int activeStep = 1;
-int notes[16];
-boolean stepactive[16];
+int notes[16] ={60,60, 60, 60, 60, 60, 60, 60, 44, 60, 60, 60, 60, 60, 60, 60};
+boolean stepactive[16]=  {true, false, true, false, true, true, false, true, true, true, true, true, true, true, true, true};
+
 int noteindex = 0;
 boolean stepshift = false;
+
+// tests for using pattern class
+Pattern pattern(pat1_notes,pat1_actives);
+
 
 
 
@@ -115,8 +120,6 @@ void setup() {
    pinMode(btnShift, INPUT);
    pinMode(btnFunc, INPUT);
 
-   stepactive = pat1_actives;
-   notes =  * pat1_notes;
    
    MIDI.setHandleClock(handleClock);
    MIDI.begin(1);

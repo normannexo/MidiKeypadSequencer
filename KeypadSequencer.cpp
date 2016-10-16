@@ -44,7 +44,15 @@ Step::Step() {
   this->active = true;
 }
 
-//StepSequence class
+//Pattern class
+Pattern::Pattern(byte * notes, boolean* actives) {
+  for (int i = 0; i < 16; i++) {
+    steps[i].note = notes[i];
+    steps[i].active = actives[i];
+  }
+  
+}
+
 
 
 // util functions
