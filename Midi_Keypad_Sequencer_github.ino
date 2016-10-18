@@ -347,10 +347,39 @@ void incOct(int step) {
 void noteStep() {
   currentstep = noteindex + 1;
   MIDI.sendNoteOff(currentnote, 0,1);
-  if (pattern.actives[noteindex]) {
-    MIDI.sendNoteOn(pattern.notes[noteindex], 127,1);
-    currentnote = pattern.notes[noteindex];
-  }
+  switch (jammode) {
+  case 0:
+    if (pattern.actives[noteindex]) {
+      MIDI.sendNoteOn(pattern.notes[noteindex], 127,1);
+      currentnote = pattern.notes[noteindex];
+    }
+    break;
+  case 1:
+    if (random(10) > 1) {
+      MIDI.sendNoteOn(pattern.notes[noteindex], 127,1);
+      currentnote = pattern.notes[noteindex];
+    }
+    break;
+  case 2:
+    MIDI.sendNoteOn(currentnote, 127,1);
+    break;
+  case 3:
+   {
+    byte rndnote = pattern.notes[random(16)];
+    MIDI.sendNoteOn(rndnote, 127,1);
+    currentnote = rndnote;
+    break;
+   }
+  case 4:
+   {
+    byte rndnote = random(10, 80);
+    MIDI.sendNoteOn(rndnote, 127,1);
+    currentnote = rndnote;
+    break;
+   }
+  
+  
+  } // end switch jammode
   
   noteindex = (noteindex+1)%16;
 
