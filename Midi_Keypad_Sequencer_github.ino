@@ -29,7 +29,7 @@ const byte COLS = 3;
 const int btnStop = 13;
 int btnStopState = 0;
 
-boolean jammode1 = false;
+byte jammode = 0;
 
 
 const int btnPlay = 12;
@@ -216,6 +216,7 @@ void loop() {
 void keypadEvent(KeypadEvent key){
     switch (keypad.getState()){
     case PRESSED:
+        
         if (key == '#') {
           switch(seqmode){
           case MODESTEP:
@@ -274,7 +275,9 @@ void keypadEvent(KeypadEvent key){
           break;
        
         } // end case keypressed
+      break;
       case RELEASED:
+        
         switch (key - '0') {
         case 1:
         case 2:
@@ -289,6 +292,7 @@ void keypadEvent(KeypadEvent key){
           handleNumKeyReleased(key);
           break;
         } // end switch released;
+      break;
       } // end switch getkeystate
     
 }
@@ -417,13 +421,16 @@ void display(uint8_t mode) {
      seg7.writeDisplay();
      break;
   case MODEJAM:
-     if (jammode1) {
-       seg7.writeDigitRaw(1,B11111111);
+     seg7.writeDigitRaw(0,B00001110);
+     seg7.writeDigitRaw(1,B01110111);
+     seg7.writeDigitRaw(3,B00010101);
+     if (jammode > 0) {
+       seg7.writeDigitNum(4, jammode, false);
        
      } else {
-      seg7.writeDigitRaw(1, B00000000);
+      seg7.writeDigitRaw(4, B00000000);
      }
-     seg7.writeDigitRaw(4, B00001111);
+     
      seg7.writeDisplay();
      break;
   case MODEPATSELECT:
@@ -498,6 +505,7 @@ void handleNumKeyPressed(char key) {
       if (btnShiftState == 1) {
         pattern.actives[activeStep - 1] = !pattern.actives[activeStep-1];
       }
+      break;
     } // end switch seqmode
     break;
   case 9:
@@ -542,7 +550,7 @@ void handleNumKeyReleased(char key) {
   case 8:
     switch (seqmode) {
     case MODEJAM:
-      //jam(numKey, true);
+      jam(numKey, false);
       break;
     } // end switch seqmode '0'
     break;
@@ -558,7 +566,14 @@ void handleNumKeyReleased(char key) {
 void jam(byte num, boolean bjam) {
   switch(num) {
   case 1:
-    jammode1 = bjam;
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+    jammode = bjam?num:0;
     break;
   }
   
