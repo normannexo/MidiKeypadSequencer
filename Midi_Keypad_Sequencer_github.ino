@@ -110,7 +110,7 @@ int noteindex = 0;
 boolean stepshift = false;
 
 // tests for using pattern class
-Pattern pattern(pat1_notes,pat1_actives);
+Pattern pattern(patternbytes[0][0],patternbytes[0][1]);
 
 
 
@@ -616,10 +616,9 @@ void jam(byte num, boolean bjam) {
 void patternSelect(byte numKey) {
   switch(numKey) {
   case 1:
-    pattern.setPattern(pat1_notes, pat1_actives);
-    break;
   case 2:
-    pattern.setPattern(pat2_notes, pat2_actives);
+  case 3:
+    pattern.setPattern(patternbytes[numKey-1][0], patternbytes[numKey-1][1]);
     break;
   }
 }

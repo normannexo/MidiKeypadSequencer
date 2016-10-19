@@ -34,7 +34,7 @@ void displayStep(Adafruit_7segment* seg, int stepdisplay) {
 
 
 // Step class
-Step::Step(byte note, boolean active) {
+Step::Step(byte note, byte active) {
   this->note = note;
   this->active = active;
 }
@@ -45,7 +45,7 @@ Step::Step() {
 }
 
 //Pattern class
-Pattern::Pattern(byte * notes, boolean* actives) {
+Pattern::Pattern(byte * notes, byte* actives) {
   for (int i = 0; i < 16; i++) {
     this->notes[i] = notes[i];
     this->actives[i] = actives[i];
@@ -53,7 +53,7 @@ Pattern::Pattern(byte * notes, boolean* actives) {
   
 }
 
-void Pattern::setPattern(byte * notes, boolean * actives) {
+void Pattern::setPattern(byte * notes, byte * actives) {
   for (int i = 0; i < 16; i++) {
     this->notes[i] = notes[i];
     this->actives[i] = actives[i];
@@ -62,7 +62,7 @@ void Pattern::setPattern(byte * notes, boolean * actives) {
 
 // util functions
 
-Step* buildStepArrayFromRaw(byte* notes, boolean* actives) {
+Step* buildStepArrayFromRaw(byte* notes, byte* actives) {
   Step tmpStep[16];
   for (int i = 0; i < 16; i++) {
     tmpStep[i].note = notes[i];

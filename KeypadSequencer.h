@@ -51,7 +51,7 @@ class Step {
   public:
     byte note = 0;
     boolean active = 0;
-    Step(byte note, boolean active);
+    Step(byte note, byte active);
     Step();
     
     
@@ -66,14 +66,14 @@ class Pattern {
     byte notes[16];
     byte actives[16];
     byte* getNotes();
-    Pattern(byte*, boolean*);
-    void setPattern(byte*, boolean*);
+    Pattern(byte*, byte*);
+    void setPattern(byte*, byte*);
 
    
     
 };
 
-Step* buildStepArrayFromRaw(byte* notes, boolean* actives);
+Step* buildStepArrayFromRaw(byte* notes, byte* actives);
 
 
   
