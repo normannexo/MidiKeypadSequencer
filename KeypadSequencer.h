@@ -67,6 +67,7 @@ class Pattern {
     byte actives[16];
     byte* getNotes();
     Pattern(byte*, boolean*);
+    void setPattern(byte*, boolean*);
 
    
     

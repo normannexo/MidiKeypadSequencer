@@ -53,7 +53,12 @@ Pattern::Pattern(byte * notes, boolean* actives) {
   
 }
 
-
+void Pattern::setPattern(byte * notes, boolean * actives) {
+  for (int i = 0; i < 16; i++) {
+    this->notes[i] = notes[i];
+    this->actives[i] = actives[i];
+  }
+}
 
 // util functions
 

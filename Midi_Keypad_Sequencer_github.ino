@@ -465,6 +465,7 @@ void display(uint8_t mode) {
   case MODEPATSELECT:
      seg7.writeDigitRaw(4, B01110011);
      seg7.writeDisplay();
+     break;
   } // end switch mode
 }
 
@@ -521,6 +522,9 @@ void handleNumKeyPressed(char key) {
   case 7:
   case 8:
     switch (seqmode) {
+    case MODEPATSELECT:
+      patternSelect(numKey);
+      break;
     case MODEJAM:
       jam(numKey, true);
       break;
@@ -607,6 +611,17 @@ void jam(byte num, boolean bjam) {
   }
   
   
+}
+
+void patternSelect(byte numKey) {
+  switch(numKey) {
+  case 1:
+    pattern.setPattern(pat1_notes, pat1_actives);
+    break;
+  case 2:
+    pattern.setPattern(pat2_notes, pat2_actives);
+    break;
+  }
 }
 
 
