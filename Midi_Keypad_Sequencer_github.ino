@@ -2,9 +2,13 @@
 #include <Wire.h>
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
-#include <Keypad.h>
 #include "KeypadSequencer.h"
 #include "initsequences.h"
+#include "src/Key.h"
+#include "src/Keypad.h"
+
+
+
 
 
 using namespace midi;
@@ -26,13 +30,13 @@ uint8_t notechars[12] = {
 
 const byte ROWS = 4;
 const byte COLS = 3;
-const int btnStop = 13;
-int btnStopState = 0;
 
 byte jammode = 0;
 
 
-const int btnPlay = 12;
+const byte btnStop = 11;
+int btnStopState = 0;
+const byte btnPlay = 12;
 int btnPlayState = 0;
 
 const int btnShift = 9;
