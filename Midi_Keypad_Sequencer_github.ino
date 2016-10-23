@@ -111,7 +111,6 @@ int activeStep = 1;
 
 
 int noteindex = 0;
-boolean stepshift = false;
 
 // tests for using pattern class
 Pattern pattern(patternbytes[0][0],patternbytes[0][1]);
@@ -119,6 +118,11 @@ Pattern pattern(patternbytes[0][0],patternbytes[0][1]);
 // pattern select mode definitions
 byte activepattern = 1;
 byte activestore = 0;
+
+// edit mode definitions MODE_STEP
+byte noteedit = 0;
+byte stepshift = 0;
+
 
 
 
@@ -562,28 +566,30 @@ void handleNumKeyPressed(char key) {
       break;
     default:
       seqmode = MODESTEP;
-      if (!stepshift) {
-        activeStep = numKey - 1;
-      } else {
-        activeStep = (numKey - 1) + 8;
+      if (activeStep != (numKey -1) + 8 * stepshift) {
+          activeStep = (numKey -1) + 8*stepshift;
+        } else {
+        if (btnShiftState == 1) {
+          pattern.actives[activeStep] = !pattern.actives[activeStep];
+        } else {
+          incStepNote(activeStep);
+        }
       }
-      if (btnShiftState == 1) {
-        pattern.actives[activeStep] = !pattern.actives[activeStep];
-      }
+      
       break;
     } // end switch seqmode
     break;
   case 9:
-    incStepNote(activeStep); 
+    pattern.actives[activeStep] = !pattern.actives[activeStep]; 
     break;
   case 0:
     switch(seqmode) {
     case MODESTEP:
       if(stepshift) {
-        stepshift = false;
+        stepshift = 0;
         activeStep = activeStep-8;
       } else {
-        stepshift = true;
+        stepshift = 1;
         activeStep = activeStep + 8;
       }
       break;
