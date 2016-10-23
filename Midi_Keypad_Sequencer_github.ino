@@ -35,20 +35,20 @@ byte jammode = 0;
 
 
 const byte btnStop = 11;
-int btnStopState = 0;
+byte btnStopState = 0;
 const byte btnPlay = 12;
-int btnPlayState = 0;
+byte btnPlayState = 0;
 
 const int btnShift = 9;
-int btnShiftState = 0;
+byte btnShiftState = 0;
 
 const uint8_t btnFunc = 10;
-int btnFuncState = 0;
-int btnFuncReading = 0;
-int btnFuncLastState = 0;
+byte btnFuncState = 0;
+byte btnFuncReading = 0;
+byte btnFuncLastState = 0;
 long lastDebounceTime;
-int debounceDelay = 50;
-int seqmode = 0;
+byte debounceDelay = 50;
+byte seqmode = 0;
 byte clockmode = CLOCKINT;
 TimeDiv timDiv(1);
 
@@ -68,16 +68,16 @@ boolean play = false;
 boolean playpressed = false;
 uint8_t activepoint[4] = {0, 1, 3,4}; 
 
-int potBpm = A0;
+byte potBpm = A0;
 uint8_t bpm = 0;
-int bpmtime = 0;
+uint16_t bpmtime = 0;
 boolean bpmedit = false;
 
 uint8_t potTimeDiv = A1;
 
-int note = 60;
-int playednote = 0;
-int currentnote = 0;
+byte note = 60;
+byte playednote = 0;
+byte currentnote = 0;
 uint8_t currentstep = 1;
 uint8_t nextsteptick = 0;
 unsigned long previousMillis = 0;
