@@ -58,7 +58,7 @@ class Button {
 class TimeDiv {
   private:
     uint8_t mValues[4] = {4, 8, 16, 32};
-    byte mIndex = 0;
+    byte mIndex = 3;
    
   public:
     TimeDiv(byte initIndex);

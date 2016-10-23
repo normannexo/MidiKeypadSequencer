@@ -13,7 +13,7 @@
 
 using namespace midi;
 
-uint8_t notechars[12] = {
+const uint8_t notechars[12] = {
   SEG7_C, // c
   SEG7_D, // d
   SEG7_D, // d
@@ -27,6 +27,8 @@ uint8_t notechars[12] = {
   SEG7_B, // b
   SEG7_B //b
 };
+const boolean noteflat[12] = {false, true, false, true, false, false, true, false, true, false, true, false};
+
 
 const byte ROWS = 4;
 const byte COLS = 3;
@@ -50,7 +52,7 @@ long lastDebounceTime;
 byte debounceDelay = 50;
 byte seqmode = 0;
 byte clockmode = CLOCKINT;
-TimeDiv timDiv(1);
+TimeDiv timDiv(2);
 
 char keys[ROWS][COLS] = {
   {'1','2','3'},
@@ -85,7 +87,7 @@ unsigned long previousTickMillis = 0;
 long interval = 1000;
 boolean bnote = false;
 
-byte data1 = 0;
+
 // init 7segment
 Adafruit_7segment seg7 = Adafruit_7segment();
 uint8_t stepdisplay; // step to display: selected or current note
@@ -101,13 +103,8 @@ int stepspeed = 6;
 uint8_t ticks = 0;
 
 
-boolean noteflat[12] = {false, true, false, true, false, false, true, false, true, false, true, false};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
-
-// define Sequence
-int activeStep = 1;
-
 
 
 int noteindex = 0;
@@ -122,7 +119,7 @@ byte activestore = 0;
 // edit mode definitions MODE_STEP
 byte noteedit = 0;
 byte stepshift = 0;
-
+byte activeStep = 0;
 
 
 
@@ -212,15 +209,7 @@ void loop() {
 
   // Anzeigenblock
   display(seqmode);
-  
-  
-  
-  
 
- 
-
- 
- delay(1);
 
 }
 
