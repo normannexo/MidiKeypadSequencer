@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include "Adafruit_LEDBackpack.h"
 
+
+
 #define MODESTEP 0
 #define MODEPLAY 1
 #define MODEBPM 2
@@ -15,6 +17,7 @@
 #define CLOCKINT 0
 #define CLOCKEXT 1
 //***************************
+
 class Button {
 
   public:
@@ -74,6 +77,8 @@ class Pattern {
 };
 
 Step* buildStepArrayFromRaw(byte* notes, byte* actives);
+
+void copyPatternToSlot(byte * target_notes, byte * target_actives, byte * notes, byte * actives);
 
 
   

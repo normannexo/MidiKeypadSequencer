@@ -2,6 +2,7 @@
 
 
 
+
 byte TimeDiv::nextValue() {
   mIndex = (mIndex + 1) % 4;
   return mValues[mIndex];
@@ -58,6 +59,8 @@ void Pattern::setPattern(byte * notes, byte * actives) {
     this->notes[i] = notes[i];
     this->actives[i] = actives[i];
   }
+
+
 }
 
 // util functions
@@ -69,6 +72,13 @@ Step* buildStepArrayFromRaw(byte* notes, byte* actives) {
     tmpStep[i].active = actives[i];
   }
   return tmpStep;
+}
+
+void copyPatternToSlot(byte * targetn, byte * targeta, byte * notes, byte * actives) {
+  for (int i = 0; i < 16; i++) {
+    targetn[i] = notes[i];
+    targeta[i]= actives[i];
+  }
 }
 
 

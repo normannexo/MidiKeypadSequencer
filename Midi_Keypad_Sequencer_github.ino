@@ -3,9 +3,9 @@
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
 #include "KeypadSequencer.h"
-#include "initsequences.h"
 #include "src/Key.h"
 #include "src/Keypad.h"
+#include "initsequences.h"
 
 
 
@@ -115,6 +115,10 @@ boolean stepshift = false;
 
 // tests for using pattern class
 Pattern pattern(patternbytes[0][0],patternbytes[0][1]);
+
+// pattern select mode definitions
+byte activepattern = 1;
+byte activestore = 0;
 
 
 
@@ -259,6 +263,9 @@ void keypadEvent(KeypadEvent key){
             break;
           case MODETIMDIV:
             timDiv.swing = (timDiv.swing +1) %2;
+            break;
+          case MODEPATSELECT:
+            activestore = activestore?0:1;
             break;
           
           }
@@ -467,9 +474,12 @@ void display(uint8_t mode) {
      seg7.writeDisplay();
      break;
   case MODEPATSELECT:
-     seg7.writeDigitRaw(4, B01110011);
-     seg7.writeDisplay();
-     break;
+    seg7.printNumber(activepattern, DEC);
+    if (activestore) {
+      seg7.writeDigitNum(0, 5);
+    }
+    seg7.writeDisplay();
+    break;
   } // end switch mode
 }
 
@@ -527,7 +537,17 @@ void handleNumKeyPressed(char key) {
   case 8:
     switch (seqmode) {
     case MODEPATSELECT:
-      patternSelect(numKey);
+      if (activestore) {
+        if (numKey < 4) {
+          copyPatternToSlot(patternbytes[numKey-1][0], patternbytes[numKey-1][1], pattern.notes, pattern.actives);
+        }
+        activestore = 0;
+        activepattern = numKey;
+
+      } else {
+        patternSelect(numKey);
+        activepattern = numKey;
+      }
       break;
     case MODEJAM:
       jam(numKey, true);
