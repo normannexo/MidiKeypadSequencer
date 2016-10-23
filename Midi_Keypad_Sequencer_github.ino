@@ -14,18 +14,18 @@
 using namespace midi;
 
 uint8_t notechars[12] = {
-  B00111001, // c
-  B01011110, // d
-  B01011110, // d
-  B01111001, // e
-  B01111001, // e
-  B01110001, // f
-  B00111101, // g
-  B00111101, // g
-  B01110111, // a
-  B01110111, // a
-  B01111100, // b
-  B01111100 //b
+  SEG7_C, // c
+  SEG7_D, // d
+  SEG7_D, // d
+  SEG7_E, // e
+  SEG7_E, // e
+  SEG7_F, // f
+  SEG7_G, // g
+  SEG7_G, // g
+  SEG7_A, // a
+  SEG7_A, // a
+  SEG7_B, // b
+  SEG7_B //b
 };
 
 const byte ROWS = 4;
@@ -450,20 +450,22 @@ void display(uint8_t mode) {
      break;
   case MODECLOCK:
      if (clockmode == CLOCKINT) {
-        seg7.writeDigitRaw(1, B00000110);
-        seg7.writeDigitRaw(3, B01010100);
-        seg7.writeDigitRaw(4, B01111000);
+        seg7.writeDigitRaw(0, B00000000);
+        seg7.writeDigitRaw(1, SEG7_I);
+        seg7.writeDigitRaw(3, SEG7_N);
+        seg7.writeDigitRaw(4, SEG7_T);
      } else {
-        seg7.writeDigitRaw(1, B00111001);
-        seg7.writeDigitRaw(3, B00110000);
-        seg7.writeDigitRaw(4, B01011100);
+        seg7.writeDigitRaw(0, SEG7_M);
+        seg7.writeDigitRaw(1, SEG7_I);
+        seg7.writeDigitRaw(3, SEG7_D);
+        seg7.writeDigitRaw(4, SEG7_I);
      }
      seg7.writeDisplay();
      break;
   case MODEJAM:
-     seg7.writeDigitRaw(0,B00001110);
-     seg7.writeDigitRaw(1,B01110111);
-     seg7.writeDigitRaw(3,B00010101);
+     seg7.writeDigitRaw(0,SEG7_J);
+     seg7.writeDigitRaw(1,SEG7_A);
+     seg7.writeDigitRaw(3,SEG7_M);
      if (jammode > 0) {
        seg7.writeDigitNum(4, jammode, false);
        
@@ -476,7 +478,13 @@ void display(uint8_t mode) {
   case MODEPATSELECT:
     seg7.printNumber(activepattern, DEC);
     if (activestore) {
-      seg7.writeDigitNum(0, 5);
+      seg7.writeDigitRaw(0, SEG7_S);
+      seg7.writeDigitRaw(1, SEG7_A);
+      seg7.writeDigitRaw(3, SEG7_V);
+    } else {
+      seg7.writeDigitRaw(0, SEG7_P);
+      seg7.writeDigitRaw(1, SEG7_A);
+      seg7.writeDigitRaw(3, SEG7_T);
     }
     seg7.writeDisplay();
     break;

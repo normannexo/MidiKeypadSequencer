@@ -16,6 +16,26 @@
 
 #define CLOCKINT 0
 #define CLOCKEXT 1
+
+//SEG7 Letters
+#define SEG7_A B01110111
+#define SEG7_B B01111100
+#define SEG7_C B00111001
+#define SEG7_D B01011110
+#define SEG7_E B01111001
+#define SEG7_F B01110001
+#define SEG7_G B00111101
+#define SEG7_I B00000110
+#define SEG7_J B00001110
+#define SEG7_M B00010101
+#define SEG7_N B01010100
+#define SEG7_O B00111111
+#define SEG7_P B01110011
+#define SEG7_S B01101101
+#define SEG7_T B01111000
+#define SEG7_U B00111110
+#define SEG7_V B00111110
+
 //***************************
 
 class Button {
