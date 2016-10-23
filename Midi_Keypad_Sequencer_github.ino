@@ -78,7 +78,7 @@ uint8_t potTimeDiv = A1;
 byte note = 60;
 byte playednote = 0;
 byte currentnote = 0;
-uint8_t currentstep = 1;
+uint8_t currentstep = 0;
 uint8_t nextsteptick = 0;
 unsigned long previousMillis = 0;
 unsigned long previousTickMillis = 0;
@@ -323,40 +323,40 @@ void resetAndPlay() {
 }
 
 void setStepNote(int step, int note) {
-  pattern.notes[step - 1] = note;
+  pattern.notes[step ] = note;
 }
 
 void incStepNote(int step) {
-  int curroct  = pattern.notes[step- 1] - (pattern.notes[step - 1]%12);
-  int offset = (pattern.notes[step-1] + 1) % 12;
+  int curroct  = pattern.notes[step] - (pattern.notes[step]%12);
+  int offset = (pattern.notes[step] + 1) % 12;
   setStepNote(step, curroct + offset);
   
 }
 
 void decOct(int step) {
-  int curr = pattern.notes[step-1];
+  int curr = pattern.notes[step];
   curr = curr - 12;
   if (curr < 0) {
-    pattern.notes[step-1] = curr + 12;
+    pattern.notes[step] = curr + 12;
   } else {
-    pattern.notes[step -1] = curr;
+    pattern.notes[step] = curr;
   }
   
 }
 
 void incOct(int step) {
-  int curr = pattern.notes[step-1];
+  int curr = pattern.notes[step];
   curr = curr + 12;
   if (curr > 127) {
-    pattern.notes[step-1] = curr -12;
+    pattern.notes[step] = curr -12;
   } else {
-    pattern.notes[step -1] = curr;
+    pattern.notes[step] = curr;
   }
   
 }
 
 void noteStep() {
-  currentstep = noteindex + 1;
+  currentstep = noteindex;
   MIDI.sendNoteOff(currentnote, 0,1);
   switch (jammode) {
   case 0:
@@ -415,21 +415,21 @@ void display(uint8_t mode) {
      } else {
        stepdisplay = activeStep;
      }
-      seg7.writeDigitNum(1,((stepdisplay-1) % 8) +1 );
-     seg7.writeDigitRaw(3, notechars[pattern.notes[stepdisplay-1]% 12]);
+     seg7.writeDigitNum(1,((stepdisplay) % 8) +1 );
+     seg7.writeDigitRaw(3, notechars[pattern.notes[stepdisplay]% 12]);
      // b oder Oktaveninfo?
-     if (noteflat[pattern.notes[stepdisplay-1] % 12]) {
+     if (noteflat[pattern.notes[stepdisplay] % 12]) {
       seg7.writeDigitRaw(4, B01111100);
      } else {
-      seg7.writeDigitNum(4, pattern.notes[stepdisplay-1] / 12);
+      seg7.writeDigitNum(4, pattern.notes[stepdisplay] / 12);
      }
-     if (!pattern.actives[stepdisplay-1]) {
+     if (!pattern.actives[stepdisplay]) {
       seg7.writeDigitRaw(3, B01000000);
       seg7.writeDigitRaw(4, B01000000);
     
      }
      
-     if (stepdisplay > 8) {
+     if (stepdisplay > 7) {
       seg7.writeDigitRaw(0, B01100011);
      } else {
       seg7.writeDigitRaw(0, B01011100);
@@ -519,7 +519,7 @@ void maketick() {
       } else {
        if (ticks == nextsteptick) {
          noteStep();
-         if (currentstep%2 == 1) {
+         if (currentstep%2 == 0) {
             nextsteptick = (nextsteptick + (int)(stepspeed * 1.3)) % 96;
          } else {
             nextsteptick = (nextsteptick + (2*stepspeed - (int)(1.3*stepspeed))) % 96;
@@ -563,12 +563,12 @@ void handleNumKeyPressed(char key) {
     default:
       seqmode = MODESTEP;
       if (!stepshift) {
-        activeStep = numKey;
+        activeStep = numKey - 1;
       } else {
-        activeStep = numKey + 8;
+        activeStep = (numKey - 1) + 8;
       }
       if (btnShiftState == 1) {
-        pattern.actives[activeStep - 1] = !pattern.actives[activeStep-1];
+        pattern.actives[activeStep] = !pattern.actives[activeStep];
       }
       break;
     } // end switch seqmode
